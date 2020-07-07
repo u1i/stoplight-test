@@ -6,13 +6,18 @@
     "version": "v1"
   },
   "host": "www.integratordomain.com",
-  "schemes": ["http", "https"],
+  "schemes": [
+    "http",
+    "https"
+  ],
   "paths": {
     "/v1/echo": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "Echo",
-        "description": "Echos back the `client_message` that is passed in.\n\nThe purpose of this method is to test basic connectivity between the\npayment integrator and Google.\n\nThis method may be called by Google multiple times per minute with valid\nor invalid parameters in order to test that security constraints are being\nheld properly. Google also calls this method ad-hoc at the integrator's\ndirection as well as at Google's direction. Google will never call this\nfaster than once every 10s, and never more than 30 times in a 15 minute\nwindow.\n\nExamples of security constraint tests are (but not limited to):\n<ul>\n  <li> Test to ensure payment integrator's endpoint doesn't negotiate\nto weak cipher suites.\n  <li> Test to ensure payment integrator's endpoint doesn't negotiate\nto anything but TLS 1.2\n  <li> Test to ensure payment integrator's endpoint doesn't support HTTP.\n  <li> Test to ensure payment integrator's endpoint mandates at least one\nknown PGP signing key.\n  <li> Test to ensure payment integrator's endpoint supports multiple\nPGP key signatures, both known and unknown, both expired and active.\n  <li> Test to ensure payment integrator only support strict JSON parsing.\n<\/ul>\n\n\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"ZWNobyB0cmFuc2FjdGlvbg\",\n    \"requestTimestamp\": \"1481899949606\"\n  },\n  \"clientMessage\": \"Echo message\"\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"clientMessage\": \"Echo message\",\n  \"serverMessage\": \"Echo server message\"\n}\n<\/code><\/pre>",
+        "description": "Echos back the `client_message` that is passed in.\n\nThe purpose of this method is to test basic connectivity between the\npayment integrator and Google.\n\nThis method may be called by Google multiple times per minute with valid\nor invalid parameters in order to test that security constraints are being\nheld properly. Google also calls this method ad-hoc at the integrator's\ndirection as well as at Google's direction. Google will never call this\nfaster than once every 10s, and never more than 30 times in a 15 minute\nwindow.\n\nExamples of security constraint tests are (but not limited to):\n<ul>\n  <li> Test to ensure payment integrator's endpoint doesn't negotiate\nto weak cipher suites.\n  <li> Test to ensure payment integrator's endpoint doesn't negotiate\nto anything but TLS 1.2\n  <li> Test to ensure payment integrator's endpoint doesn't support HTTP.\n  <li> Test to ensure payment integrator's endpoint mandates at least one\nknown PGP signing key.\n  <li> Test to ensure payment integrator's endpoint supports multiple\nPGP key signatures, both known and unknown, both expired and active.\n  <li> Test to ensure payment integrator only support strict JSON parsing.\n</ul>\n\n\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"ZWNobyB0cmFuc2FjdGlvbg\",\n    \"requestTimestamp\": \"1481899949606\"\n  },\n  \"clientMessage\": \"Echo message\"\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"clientMessage\": \"Echo message\",\n  \"serverMessage\": \"Echo server message\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -35,9 +40,11 @@
     },
     "/v1/associateAccount": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "AssociateAccount",
-        "description": "Associates the customer's account with the payment processor to the\nGoogle instrument being added.\n\nAccount association happens after the integrator has authenticated the\nuser. Association occurs via a server-to-server call that contains the\n`requestId` for the associated authentication flow\n(`authenticationRequestId`), an `associationId` and a `googlePaymentToken`\n(GPT). The payment processor should associate the `associationId` and the\n`googlePaymentToken` to the customer's  account for authentication. The\nGPT is used to initiate payments. The `associationId` is used\nduring re-authentication calls to identify the account for authentication.\n\nIf Google sends an `associationId` or a `googlePaymentToken` that the\nintegrator has already seen during a different association, then it\nthrows an error.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"cmVxdWVzdDE\",\n    \"requestTimestamp\": \"1481899949606\"\n },\n \"googlePaymentToken\": \"ZXhhbXBsZSB1bmlxdWUgcGF5bWVudCB0b2tlbiB2YWx1ZQ==\",\n \"authenticationRequestId\": \"bnAxdWTydDX==\",\n \"associationId\": \"LmddbXBsZSByZWZlcmVuY2UgdG9rZW4gdmFsdWU=\",\n \"provideUserInformation\": true\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n  {\n  \"responseHeader\": {\n    \"requestTimestamp\": \"1481899949611\"\n  },\n  \"paymentIntegratorAssociationId\": \"xx77df88934hfd\",\n  \"accountId\": \"1234-5678-91\",\n  \"accountNickname\": \"***-91\",\n  \"tokenExpirationTime\": \"0\",\n  \"userInformation\": {\n    \"name\": \"Example Customer\",\n    \"addressLine\": [\"123 Main St\"],\n    \"localityName\": \"Springfield\",\n    \"administrativeAreaName\": \"CO\",\n    \"postalCodeNumber\": \"80309\",\n    \"countryCode\": \"US\"\n  },\n  \"result\": \"SUCCESS\"\n}\n<\/code><\/pre>",
+        "description": "Associates the customer's account with the payment processor to the\nGoogle instrument being added.\n\nAccount association happens after the integrator has authenticated the\nuser. Association occurs via a server-to-server call that contains the\n`requestId` for the associated authentication flow\n(`authenticationRequestId`), an `associationId` and a `googlePaymentToken`\n(GPT). The payment processor should associate the `associationId` and the\n`googlePaymentToken` to the customer's  account for authentication. The\nGPT is used to initiate payments. The `associationId` is used\nduring re-authentication calls to identify the account for authentication.\n\nIf Google sends an `associationId` or a `googlePaymentToken` that the\nintegrator has already seen during a different association, then it\nthrows an error.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"cmVxdWVzdDE\",\n    \"requestTimestamp\": \"1481899949606\"\n },\n \"googlePaymentToken\": \"ZXhhbXBsZSB1bmlxdWUgcGF5bWVudCB0b2tlbiB2YWx1ZQ==\",\n \"authenticationRequestId\": \"bnAxdWTydDX==\",\n \"associationId\": \"LmddbXBsZSByZWZlcmVuY2UgdG9rZW4gdmFsdWU=\",\n \"provideUserInformation\": true\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n  {\n  \"responseHeader\": {\n    \"requestTimestamp\": \"1481899949611\"\n  },\n  \"paymentIntegratorAssociationId\": \"xx77df88934hfd\",\n  \"accountId\": \"1234-5678-91\",\n  \"accountNickname\": \"***-91\",\n  \"tokenExpirationTime\": \"0\",\n  \"userInformation\": {\n    \"name\": \"Example Customer\",\n    \"addressLine\": [\"123 Main St\"],\n    \"localityName\": \"Springfield\",\n    \"administrativeAreaName\": \"CO\",\n    \"postalCodeNumber\": \"80309\",\n    \"countryCode\": \"US\"\n  },\n  \"result\": \"SUCCESS\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -60,9 +67,11 @@
     },
     "/v1/capture": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "Capture",
-        "description": "Initiates money movement between a customer's account held with Google\nand the payment processor. The combination of `requestId` within the\nheader and `paymentIntegratorAccountId` is the idempotency key and uniquely\nidentifies this transaction.  All mutations on this transaction (refunds)\npopulate the `requestId` value in the `capture_request_id`\nfield.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502220196077\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"googlePaymentToken\": \"ZXhhbXBsZSB1bmlxdWUgcGF5bWVudCB0b2tlbiB2YWx1ZQ\",\n  \"transactionDescription\": \"Google - Music\",\n  \"currencyCode\": \"INR\",\n  \"amount\": \"728000000\",\n  \"captureContext\": { \"userIpAddress\":\"\" }\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"result\": \"SUCCESS\",\n  \"paymentIntegratorTransactionId\": \"aW50ZWdyYXRvciB0cmFuc2FjdGlvbiBpZA\"\n}\n<\/code><\/pre>",
+        "description": "Initiates money movement between a customer's account held with Google\nand the payment processor. The combination of `requestId` within the\nheader and `paymentIntegratorAccountId` is the idempotency key and uniquely\nidentifies this transaction.  All mutations on this transaction (refunds)\npopulate the `requestId` value in the `capture_request_id`\nfield.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502220196077\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"googlePaymentToken\": \"ZXhhbXBsZSB1bmlxdWUgcGF5bWVudCB0b2tlbiB2YWx1ZQ\",\n  \"transactionDescription\": \"Google - Music\",\n  \"currencyCode\": \"INR\",\n  \"amount\": \"728000000\",\n  \"captureContext\": { \"userIpAddress\":\"\" }\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"result\": \"SUCCESS\",\n  \"paymentIntegratorTransactionId\": \"aW50ZWdyYXRvciB0cmFuc2FjdGlvbiBpZA\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -85,9 +94,11 @@
     },
     "/v1/asynchronousCapture": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "AsynchronousCapture",
-        "description": "Triggers the start of a money movement operation between a customer's\naccount and the integrator. The integrator should acknowledge the request\nand perform whatever actions need to happen in order to complete the\ncapture (e.g., collect a PIN from the user). The integrator will inform\nGoogle of the capture's final result by calling the\nCaptureResultNotification API.\n\nThe combination of `requestId` within\nthe header and `paymentIntegratorAccountId` is the idempotency key and\nuniquely identifies this transaction.  All mutations on this transaction\n(refunds) populate the `requestId` value in the `capture_request_id` field.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 1,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502220196077\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashIN_INR\",\n  \"upi_details\": {\n      \"vpa\": \"foo@icici\"\n  },\n  \"transactionDescription\": \"Google - Music\",\n  \"currencyCode\": \"INR\",\n  \"amount\": \"728000000\"\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"result\": \"ACKNOWLEDGED\",\n  \"paymentIntegratorTransactionId\": \"aW50ZWdyYXRvciB0cmFuc2FjdGlvbiBpZA\"\n}\n<\/code><\/pre>",
+        "description": "Triggers the start of a money movement operation between a customer's\naccount and the integrator. The integrator should acknowledge the request\nand perform whatever actions need to happen in order to complete the\ncapture (e.g., collect a PIN from the user). The integrator will inform\nGoogle of the capture's final result by calling the\nCaptureResultNotification API.\n\nThe combination of `requestId` within\nthe header and `paymentIntegratorAccountId` is the idempotency key and\nuniquely identifies this transaction.  All mutations on this transaction\n(refunds) populate the `requestId` value in the `capture_request_id` field.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 1,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502220196077\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashIN_INR\",\n  \"upi_details\": {\n      \"vpa\": \"foo@icici\"\n  },\n  \"transactionDescription\": \"Google - Music\",\n  \"currencyCode\": \"INR\",\n  \"amount\": \"728000000\"\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"result\": \"ACKNOWLEDGED\",\n  \"paymentIntegratorTransactionId\": \"aW50ZWdyYXRvciB0cmFuc2FjdGlvbiBpZA\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -110,9 +121,11 @@
     },
     "/v1/generateDeviceCaptureToken": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "GenerateDeviceCaptureToken",
-        "description": "Requests a token from the integrator that can be executed on the user's\ndevice in order to debit the device's stored value. The combination of\n`requestId` within the header and `paymentIntegratorAccountId` is the\nidempotency key and uniquely identifies this transaction.  All mutations on\nthis transaction (refunds) populate the `requestId` value in the\n`capture_request_id` field.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 1,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502220196077\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"transactionDescription\": \"Google - Music\",\n  \"currencyCode\": \"JPY\",\n  \"amount\": \"545000000\",\n  \"deviceIdentifier\": \"FC199014344145\",\n  \"instanceIdentifier\": \"edy15626388286838485\",\n  \"sessionIdentifier\": \"5226453\",\n  \"balance\": \"16000000\"\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"result\": \"SUCCESS\",\n  \"paymentIntegratorTransactionId\": \"aW50ZWdyYXRvciB0cmFuc2FjdGlvbiBpZA\",\n  \"deviceCaptureToken\": \"WW91IHN1cmUgYXJlIGN1cmlvdXMsIGFyZW4ndCB5b3U\/\"\n}\n<\/code><\/pre>",
+        "description": "Requests a token from the integrator that can be executed on the user's\ndevice in order to debit the device's stored value. The combination of\n`requestId` within the header and `paymentIntegratorAccountId` is the\nidempotency key and uniquely identifies this transaction.  All mutations on\nthis transaction (refunds) populate the `requestId` value in the\n`capture_request_id` field.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 1,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502220196077\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"transactionDescription\": \"Google - Music\",\n  \"currencyCode\": \"JPY\",\n  \"amount\": \"545000000\",\n  \"deviceIdentifier\": \"FC199014344145\",\n  \"instanceIdentifier\": \"edy15626388286838485\",\n  \"sessionIdentifier\": \"5226453\",\n  \"balance\": \"16000000\"\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"result\": \"SUCCESS\",\n  \"paymentIntegratorTransactionId\": \"aW50ZWdyYXRvciB0cmFuc2FjdGlvbiBpZA\",\n  \"deviceCaptureToken\": \"WW91IHN1cmUgYXJlIGN1cmlvdXMsIGFyZW4ndCB5b3U/\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -135,9 +148,11 @@
     },
     "/v1/getDeviceCaptureResult": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "GetDeviceCaptureResult",
-        "description": "Requests the result of the execution of a previously generated device\ncapture token.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 1,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502220196077\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"deviceCaptureRequestId\": \"WW91IHN1cFyZW4ndCB5b3U\",\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"result\": \"SUCCESS\",\n  \"device_capture_result\": {\n    \"device_capture_result_code\": \"SUCCESS\"\n  }\n}\n<\/code><\/pre>",
+        "description": "Requests the result of the execution of a previously generated device\ncapture token.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 1,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502220196077\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"deviceCaptureRequestId\": \"WW91IHN1cFyZW4ndCB5b3U\",\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"result\": \"SUCCESS\",\n  \"device_capture_result\": {\n    \"device_capture_result_code\": \"SUCCESS\"\n  }\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -160,9 +175,11 @@
     },
     "/v1/refund": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "Refund",
-        "description": "Refunds a portion of or the entire transaction initiated through `capture`.\nThe combination of `requestId` within the header and\n`paymentIntegratorAccountId` is the idempotency key, which uniquely\nidentifies this transaction.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"liUrreQY233839dfFFb24gaQM\",\n    \"requestTimestamp\": \"1502220434778\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"captureRequestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n  \"currencyCode\": \"INR\",\n  \"refundAmount\": \"208000000\"\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502220440632\",\n  },\n  \"result\": \"SUCCESS\",\n  \"paymentIntegratorRefundId\": \"cmVmdW5kIGlkZW50aWZpZXINCg\"\n}\n<\/code><\/pre>",
+        "description": "Refunds a portion of or the entire transaction initiated through `capture`.\nThe combination of `requestId` within the header and\n`paymentIntegratorAccountId` is the idempotency key, which uniquely\nidentifies this transaction.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"liUrreQY233839dfFFb24gaQM\",\n    \"requestTimestamp\": \"1502220434778\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"captureRequestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n  \"currencyCode\": \"INR\",\n  \"refundAmount\": \"208000000\"\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502220440632\",\n  },\n  \"result\": \"SUCCESS\",\n  \"paymentIntegratorRefundId\": \"cmVmdW5kIGlkZW50aWZpZXINCg\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -185,9 +202,11 @@
     },
     "/v1/disburseFunds": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "DisburseFunds",
-        "description": "Initiates money movement between the payment processor and the customer's\naccount. The combination of `requestId` within the header and\n`paymentIntegratorAccountId` is the idempotency key and uniquely identifies\nthis transaction. All mutations on this transaction populate the\n`requestId` value in the `disburse_funds_request_id` field.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"liUrreQY233839dfFFb24gaQM\",\n    \"requestTimestamp\": \"1502220434778\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"upi_details\": {\n      \"vpa\": \"foo@icici\"\n  },\n  \"transactionDescription\": \"Google - Music\",\n  \"currencyCode\": \"INR\",\n  \"amount\": \"208000000\"\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"result\": \"SUCCESS\",\n  \"disburse_funds_result\": {\n    \"disburse_funds_result_code\": \"SUCCESS\"\n  }\n}\n<\/code><\/pre>",
+        "description": "Initiates money movement between the payment processor and the customer's\naccount. The combination of `requestId` within the header and\n`paymentIntegratorAccountId` is the idempotency key and uniquely identifies\nthis transaction. All mutations on this transaction populate the\n`requestId` value in the `disburse_funds_request_id` field.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"liUrreQY233839dfFFb24gaQM\",\n    \"requestTimestamp\": \"1502220434778\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"upi_details\": {\n      \"vpa\": \"foo@icici\"\n  },\n  \"transactionDescription\": \"Google - Music\",\n  \"currencyCode\": \"INR\",\n  \"amount\": \"208000000\"\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"result\": \"SUCCESS\",\n  \"disburse_funds_result\": {\n    \"disburse_funds_result_code\": \"SUCCESS\"\n  }\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -210,9 +229,11 @@
     },
     "/v1/refreshToken": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "RefreshToken",
-        "description": "Refreshes a payment token's expiration date.\n\nToken refresh happens when a token has expired, is near expiry, or when\nGoogle chooses to refresh based on risk profiles. The user is\nreauthenticated prior to calling this method. The `authenticationRequestId`\nthat is passed contains the proof of authentication.  The\n`googlePaymentToken` (GPT) is passed as well. A successful response to this\ncall extends the GPT's expiry date.\n\nIf Google sends a GPT that the integrator has never associated before, then\nit throws an error.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"bhHmmdHHvbeY\",\n    \"requestTimestamp\": \"1481899949606\"\n  },\n  \"authenticationRequestId\": \"dGVzdHRva2VuZnJvbWdvb2dsZQ==\",\n  \"googlePaymentToken\": \"ZXhhbXBsZSB1bmlxdWUgcGF5bWVudCB0b2tlbiB2YWx1ZQ\",\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"paymentIntegratorRefreshTokenId\": \"iuKndnVzaCB0b2tlbiYYke=\",\n  \"tokenExpirationTime\": \"1481901824177\",\n  \"result\": \"SUCCESS\"\n}\n<\/code><\/pre>",
+        "description": "Refreshes a payment token's expiration date.\n\nToken refresh happens when a token has expired, is near expiry, or when\nGoogle chooses to refresh based on risk profiles. The user is\nreauthenticated prior to calling this method. The `authenticationRequestId`\nthat is passed contains the proof of authentication.  The\n`googlePaymentToken` (GPT) is passed as well. A successful response to this\ncall extends the GPT's expiry date.\n\nIf Google sends a GPT that the integrator has never associated before, then\nit throws an error.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"bhHmmdHHvbeY\",\n    \"requestTimestamp\": \"1481899949606\"\n  },\n  \"authenticationRequestId\": \"dGVzdHRva2VuZnJvbWdvb2dsZQ==\",\n  \"googlePaymentToken\": \"ZXhhbXBsZSB1bmlxdWUgcGF5bWVudCB0b2tlbiB2YWx1ZQ\",\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1481900013178\",\n  },\n  \"paymentIntegratorRefreshTokenId\": \"iuKndnVzaCB0b2tlbiYYke=\",\n  \"tokenExpirationTime\": \"1481901824177\",\n  \"result\": \"SUCCESS\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -235,9 +256,11 @@
     },
     "/v1/remittanceStatementNotification": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "RemittanceStatementNotification",
-        "description": "Notifies the integrator of a new remittance statement.\n\nStatement notifications occur everytime a new statement is raised that\nrepresents money that Google will pay the integrator or the money that the\nintegrator owes Google.\n\nIf the integrator returns a success, then it is assumed that the\nstatement has been accepted and will be paid.\n\nThe `requestId` is also the statement Id (used elsewhere). The combination\nof `requestId` within the header and `paymentIntegratorAccountId` is the\nidempotency key and uniquely identifies this statement.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"0123434-statement-abc\",\n    \"requestTimestamp\": \"1502632800000\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"remittanceStatementSummary\": {\n    \"statementDate\": \"1502607600000\",\n    \"billingPeriod\": {\n      \"startDate\": \"1502434800000\",\n      \"endDate\": \"1502521199000\",\n    },\n    \"dateDue\": \"1503212400000\",\n    \"currencyCode\": \"INR\",\n    \"totalDueByIntegrator\": \"1076000000\",\n    \"remittanceInstructions\": {\n      \"memoLineId\": \"stmt-1AB-pp0-invisi\"\n    }\n  }\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502632802000\",\n  },\n  \"paymentIntegratorStatementId\": \"334a\",\n  \"result\": \"ACCEPTED\"\n}\n<\/code><\/pre>",
+        "description": "Notifies the integrator of a new remittance statement.\n\nStatement notifications occur everytime a new statement is raised that\nrepresents money that Google will pay the integrator or the money that the\nintegrator owes Google.\n\nIf the integrator returns a success, then it is assumed that the\nstatement has been accepted and will be paid.\n\nThe `requestId` is also the statement Id (used elsewhere). The combination\nof `requestId` within the header and `paymentIntegratorAccountId` is the\nidempotency key and uniquely identifies this statement.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"0123434-statement-abc\",\n    \"requestTimestamp\": \"1502632800000\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"remittanceStatementSummary\": {\n    \"statementDate\": \"1502607600000\",\n    \"billingPeriod\": {\n      \"startDate\": \"1502434800000\",\n      \"endDate\": \"1502521199000\",\n    },\n    \"dateDue\": \"1503212400000\",\n    \"currencyCode\": \"INR\",\n    \"totalDueByIntegrator\": \"1076000000\",\n    \"remittanceInstructions\": {\n      \"memoLineId\": \"stmt-1AB-pp0-invisi\"\n    }\n  }\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502632802000\",\n  },\n  \"paymentIntegratorStatementId\": \"334a\",\n  \"result\": \"ACCEPTED\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -260,9 +283,11 @@
     },
     "/v1/sendOtp": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "SendOtp",
-        "description": "Requests the integrator send an OTP to the phone number.\n\nIf the integrator returns `SUCCESS`, then Google\nexpects an SMS sent to the phone number.\n\nGoogle provides only an `accountPhoneNumber` when a user initially\nassociates their account with Google.  During reauthentication,\nGoogle provides the `accountPhoneNumber` and the `associationId`. If,\nduring reauthentication, the phone number provided (identified by\nthe `accountPhoneNumber`) does not match the phone number associated with\nthe account (identified by the `associationId`) the integrator must\nreturn `PHONE_NUMBER_NOT_ASSOCIATED_WITH_ACCOUNT`.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"0123434-otp-abc\",\n    \"requestTimestamp\": \"1502545413026\"\n  },\n  \"account_phone_number\": \"+918067218010\",\n  \"sms_matching_token\": \"AB12345678C\"\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502545413098\"\n  },\n  \"paymentIntegratorSendOtpId\": \"99==ABC EF\",\n  \"result\": \"SUCCESS\"\n}\n<\/code><\/pre>",
+        "description": "Requests the integrator send an OTP to the phone number.\n\nIf the integrator returns `SUCCESS`, then Google\nexpects an SMS sent to the phone number.\n\nGoogle provides only an `accountPhoneNumber` when a user initially\nassociates their account with Google.  During reauthentication,\nGoogle provides the `accountPhoneNumber` and the `associationId`. If,\nduring reauthentication, the phone number provided (identified by\nthe `accountPhoneNumber`) does not match the phone number associated with\nthe account (identified by the `associationId`) the integrator must\nreturn `PHONE_NUMBER_NOT_ASSOCIATED_WITH_ACCOUNT`.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"0123434-otp-abc\",\n    \"requestTimestamp\": \"1502545413026\"\n  },\n  \"account_phone_number\": \"+918067218010\",\n  \"sms_matching_token\": \"AB12345678C\"\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502545413098\"\n  },\n  \"paymentIntegratorSendOtpId\": \"99==ABC EF\",\n  \"result\": \"SUCCESS\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -285,9 +310,11 @@
     },
     "/v1/verifyOtp": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "VerifyOtp",
-        "description": "Verifies an OTP value was sent by the integrator for the account.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"0123434-otp-abc\",\n    \"requestTimestamp\": \"1502545413098\"\n  },\n  \"sendOtpRequestId\": \"0123434-otp-abc\",\n  \"otp\": \"7754321\"\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502545413132\"\n  },\n  \"paymentIntegratorVerifyOtpId\": \"5539163\",\n  \"result\": \"SUCCESS\"\n}\n<\/code><\/pre>",
+        "description": "Verifies an OTP value was sent by the integrator for the account.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"0123434-otp-abc\",\n    \"requestTimestamp\": \"1502545413098\"\n  },\n  \"sendOtpRequestId\": \"0123434-otp-abc\",\n  \"otp\": \"7754321\"\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502545413132\"\n  },\n  \"paymentIntegratorVerifyOtpId\": \"5539163\",\n  \"result\": \"SUCCESS\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -310,9 +337,11 @@
     },
     "/v1/generateReferenceNumber": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "GenerateReferenceNumber",
-        "description": "Creates a reference number and registers payment information (description,\ntimestamp) with the integrator.\n\nThe combination of the\n`paymentIntegratorAccountId` from the request and the `referenceNumber`\nfrom the response form a unique key that identifies the transaction for\nsubsequent operations on this transaction.\n\nThe `amount` field is defined in *micro currency units* (micros), which\nmeans that $2 would be represented with the digit `2` followed by six\ndigits `0`, resulting in `2000000`.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502220196077\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"transactionDescription\": \"Google - Music\",\n  \"currencyCode\": \"USD\",\n  \"amount\": \"2000000\"\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502220197000\",\n  },\n  \"referenceNumber\": \"aW50ZWdyYXRvciB0cmFuc2FjdGlvbiBpZA\"\n}\n<\/code><\/pre>",
+        "description": "Creates a rseference number and registers payment information (description,\ntimestamp) with the integrator.\n\nThe combination of the\n`paymentIntegratorAccountId` from the request and the `referenceNumber`\nfrom the response form a unique key that identifies the transaction for\nsubsequent operations on this transaction.\n\nThe `amount` field is defined in *micro currency units* (micros), which\nmeans that $2 would be represented with the digit `2` followed by six\ndigits `0`, resulting in `2000000`.\n\nAn example request looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502220196077\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"transactionDescription\": \"Google - Music\",\n  \"currencyCode\": \"USD\",\n  \"amount\": \"2000000\"\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502220197000\",\n  },\n  \"referenceNumber\": \"aW50ZWdyYXRvciB0cmFuc2FjdGlvbiBpZA\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -335,9 +364,11 @@
     },
     "/v1/cancelReferenceNumber": {
       "post": {
-        "tags": ["payment_processor_service"],
+        "tags": [
+          "payment_processor_service"
+        ],
         "operationId": "CancelReferenceNumber",
-        "description": "Cancels a reference number by invalidating it in the integrators system and\npreventing future payments.\n\nOnly a reference number that was previously created by calling\n<a href=\"generateReferenceNumber\">generateReferenceNumber<\/a> is subject\nto cancellation.\n\nAn example requests looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502223797000\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"referenceNumber\": \"aW50ZWdyYXRvciB0cmFuc2FjdGlvbiBpZA\"\n}\n<\/code><\/pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502223798000\",\n  },\n  \"result\": \"SUCCESS\"\n}\n<\/code><\/pre>",
+        "description": "Cancels a reference number by invalidating it in the integrators system and\npreventing future payments.\n\nOnly a reference number that was previously created by calling\n<a href=\"generateReferenceNumber\">generateReferenceNumber</a> is subject\nto cancellation.\n\nAn example requests looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"requestHeader\": {\n    \"protocolVersion\": {\n      \"major\": 1,\n      \"minor\": 0,\n      \"revision\": 0\n    },\n    \"requestId\": \"bWVyY2hhbnQgdHJhbnNhY3Rpb24gaWQ\",\n    \"requestTimestamp\": \"1502223797000\"\n  },\n  \"paymentIntegratorAccountId\": \"InvisiCashUSA_USD\",\n  \"referenceNumber\": \"aW50ZWdyYXRvciB0cmFuc2FjdGlvbiBpZA\"\n}\n</code></pre>\nAn example response looks like:\n<pre class=\"prettyprint\"><code>\n{\n  \"responseHeader\": {\n    \"responseTimestamp\": \"1502223798000\",\n  },\n  \"result\": \"SUCCESS\"\n}\n</code></pre>",
         "parameters": [
           {
             "name": "body",
@@ -385,7 +416,7 @@
           "type": "string"
         },
         "requestTimestamp": {
-          "description": "**REQUIRED**: Timestamp of this request represented as milliseconds since\nepoch.  The receiver should verify that this timestamp is \u00B1 60s of 'now'.\nThis request timestamp is not idempotent upon retries.",
+          "description": "**REQUIRED**: Timestamp of this request represented as milliseconds since\nepoch.  The receiver should verify that this timestamp is ± 60s of 'now'.\nThis request timestamp is not idempotent upon retries.",
           "type": "string",
           "format": "int64"
         },
@@ -446,7 +477,7 @@
       "type": "object",
       "properties": {
         "responseTimestamp": {
-          "description": "**REQUIRED**: Timestamp of this response represented as milliseconds since\nepoch.  The receiver should verify that this timestamp is \u00B1 60s of 'now'.",
+          "description": "**REQUIRED**: Timestamp of this response represented as milliseconds since\nepoch.  The receiver should verify that this timestamp is ± 60s of 'now'.",
           "type": "string",
           "format": "int64"
         }
@@ -521,11 +552,11 @@
           "type": "string"
         },
         "accountNickname": {
-          "description": "**OPTIONAL**: String by which the user knows this account for display\npurposes.  This is a suffix of the account nickname.  For example last\nfour digits of a phone number. Google will indicate in the user interface\nthat this is only a suffix of the nickname.\n\n<aside class=\"caution\"><b>Caution:<\/b> This value can be PII, but must\nnever be SPII.<\/aside>\n\nThis value will be displayed in UIs like the purchase flow to\nallow the user to distinguish between payment methods.\n\n<aside class=\"note\"><b>Note:<\/b> that either this value or the\n`full_account_nickname` must be present, never both.<\/aside>",
+          "description": "**OPTIONAL**: String by which the user knows this account for display\npurposes.  This is a suffix of the account nickname.  For example last\nfour digits of a phone number. Google will indicate in the user interface\nthat this is only a suffix of the nickname.\n\n<aside class=\"caution\"><b>Caution:</b> This value can be PII, but must\nnever be SPII.</aside>\n\nThis value will be displayed in UIs like the purchase flow to\nallow the user to distinguish between payment methods.\n\n<aside class=\"note\"><b>Note:</b> that either this value or the\n`full_account_nickname` must be present, never both.</aside>",
           "type": "string"
         },
         "fullAccountNickname": {
-          "description": "**OPTIONAL**: String by which the user knows this account for display\npurposes.  Unlike `account_nickname` this is the full account nickname.\nFor example `56565-56501` for a phone number or sally@sample-email.com\nfor an email identity.\n\n<aside class=\"caution\"><b>Caution:<\/b> This value can be PII, but must\nnever be SPII.<\/aside>\n\nThis value will be displayed in UIs like the purchase flow to allow the\nuser to distinguish between payment methods.\n\n<aside class=\"note\"><b>Note:<\/b> that either this value or the\n`account_nickname` must be present, never both.<\/aside>",
+          "description": "**OPTIONAL**: String by which the user knows this account for display\npurposes.  Unlike `account_nickname` this is the full account nickname.\nFor example `56565-56501` for a phone number or sally@sample-email.com\nfor an email identity.\n\n<aside class=\"caution\"><b>Caution:</b> This value can be PII, but must\nnever be SPII.</aside>\n\nThis value will be displayed in UIs like the purchase flow to allow the\nuser to distinguish between payment methods.\n\n<aside class=\"note\"><b>Note:</b> that either this value or the\n`account_nickname` must be present, never both.</aside>",
           "type": "string"
         },
         "userMessage": {
@@ -569,7 +600,7 @@
           }
         },
         "localityName": {
-          "description": "**OPTIONAL**: This is something of a fuzzy term, but it generally refers to\nthe city\/town portion of an address.  In regions of the world\nwhere localities are not well defined or do not fit into this\nstructure well (for example, Japan and China), leave\nlocality_name empty and use address_line.\n\nExamples: US city, IT comune, UK post town.",
+          "description": "**OPTIONAL**: This is something of a fuzzy term, but it generally refers to\nthe city/town portion of an address.  In regions of the world\nwhere localities are not well defined or do not fit into this\nstructure well (for example, Japan and China), leave\nlocality_name empty and use address_line.\n\nExamples: US city, IT comune, UK post town.",
           "type": "string"
         },
         "administrativeAreaName": {
@@ -620,7 +651,7 @@
           "type": "string"
         },
         "amount": {
-          "description": "**REQUIRED**: The amount of the purchase, in\n[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\") of the currency unit.",
+          "description": "**REQUIRED**: The amount of the purchase, in\n[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\") of the currency unit.",
           "type": "string",
           "format": "int64"
         },
@@ -690,11 +721,11 @@
           ]
         },
         "rawResult": {
-          "description": "**OPTIONAL**: Raw result of this capture.  Used to help inform Google's\nrisk engine and analytics.  In decline code\u2013mapping situations, data is\nsometimes lost.  The integrator can choose to give Google a raw code.\nFor example, a credit card gateway  (the integrator)  may use this field to\ncommunicate to Google the exact decline code that was received from the\nVISA network.  In that case, the `scope` would be \"visa\" and the `raw_code`\nwould be whatever the VISA network returned.\n\nThis value is **required** if the `result` is not `SUCCESS`.",
+          "description": "**OPTIONAL**: Raw result of this capture.  Used to help inform Google's\nrisk engine and analytics.  In decline code–mapping situations, data is\nsometimes lost.  The integrator can choose to give Google a raw code.\nFor example, a credit card gateway  (the integrator)  may use this field to\ncommunicate to Google the exact decline code that was received from the\nVISA network.  In that case, the `scope` would be \"visa\" and the `raw_code`\nwould be whatever the VISA network returned.\n\nThis value is **required** if the `result` is not `SUCCESS`.",
           "$ref": "#/definitions/RawResult"
         },
         "transactionLimit": {
-          "description": "**OPTIONAL**: If Result is `CHARGE_EXCEEDS_TRANSACTION_LIMIT`, then this is\nthe maximum amount the user could spend on a transaction (in\n[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\")).  This\nis used for structured, user facing messaging and decline rate analysis.\n\nThis must be a limit relative to the `currencyCode` on the request.",
+          "description": "**OPTIONAL**: If Result is `CHARGE_EXCEEDS_TRANSACTION_LIMIT`, then this is\nthe maximum amount the user could spend on a transaction (in\n[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\")).  This\nis used for structured, user facing messaging and decline rate analysis.\n\nThis must be a limit relative to the `currencyCode` on the request.",
           "type": "string",
           "format": "int64"
         }
@@ -818,7 +849,7 @@
           "type": "string"
         },
         "amount": {
-          "description": "**REQUIRED**: The amount of the purchase, in\n[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\") of the currency unit.",
+          "description": "**REQUIRED**: The amount of the purchase, in\n[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\") of the currency unit.",
           "type": "string",
           "format": "int64"
         },
@@ -839,7 +870,7 @@
           "type": "string"
         },
         "balance": {
-          "description": "**OPTIONAL**: The current balance on the Secure Element, in\n[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\") of the currency unit.",
+          "description": "**OPTIONAL**: The current balance on the Secure Element, in\n[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\") of the currency unit.",
           "type": "string",
           "format": "int64"
         }
@@ -891,12 +922,12 @@
           ]
         },
         "transactionMaxLimit": {
-          "description": "**OPTIONAL**: If `generateDeviceCaptureTokenResultCode` is\n`CHARGE_EXCEEDS_TRANSACTION_LIMIT` then this is the value of the maximum\nallowable transaction. This is used for structured, user facing messaging\nand decline rate analysis.\n\nThis amount is\nmicros\/[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\") of the same `currencyCode` as the original\n`generateDeviceCaptureToken` method call.",
+          "description": "**OPTIONAL**: If `generateDeviceCaptureTokenResultCode` is\n`CHARGE_EXCEEDS_TRANSACTION_LIMIT` then this is the value of the maximum\nallowable transaction. This is used for structured, user facing messaging\nand decline rate analysis.\n\nThis amount is\nmicros/[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\") of the same `currencyCode` as the original\n`generateDeviceCaptureToken` method call.",
           "type": "string",
           "format": "int64"
         },
         "transactionMinLimit": {
-          "description": "**OPTIONAL**: If `generateDeviceCaptureTokenResultCode` is\n`CHARGE_UNDER_TRANSACTION_LIMIT` then this is the value of the minimum\nallowable transaction. This is used for structured, user facing messaging\nand decline rate analysis.\n\nThis amount is\nmicros\/[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\") of the same `currencyCode` as the original\n`generateDeviceCaptureToken` method call.",
+          "description": "**OPTIONAL**: If `generateDeviceCaptureTokenResultCode` is\n`CHARGE_UNDER_TRANSACTION_LIMIT` then this is the value of the minimum\nallowable transaction. This is used for structured, user facing messaging\nand decline rate analysis.\n\nThis amount is\nmicros/[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\") of the same `currencyCode` as the original\n`generateDeviceCaptureToken` method call.",
           "type": "string",
           "format": "int64"
         }
@@ -931,7 +962,7 @@
           "$ref": "#/definitions/ResponseHeader"
         },
         "result": {
-          "description": "**REQUIRED**: The result of this API call. This result is not the same as\nthe device capture's result; this is an indicator of whether the integrator\nwas able to successfully determine\/look up the device capture's result. A\n`SUCCESS` in this result does not necessarily mean the device capture\nitself was successful.",
+          "description": "**REQUIRED**: The result of this API call. This result is not the same as\nthe device capture's result; this is an indicator of whether the integrator\nwas able to successfully determine/look up the device capture's result. A\n`SUCCESS` in this result does not necessarily mean the device capture\nitself was successful.",
           "type": "string",
           "enum": [
             "UNKNOWN_RESULT",
@@ -1000,7 +1031,7 @@
           "type": "string"
         },
         "refundAmount": {
-          "description": "**REQUIRED**: The amount of the refund, a positive number of\n[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\") of the\ncurrency unit.",
+          "description": "**REQUIRED**: The amount of the refund, a positive number of\n[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\") of the\ncurrency unit.",
           "type": "string",
           "format": "int64"
         }
@@ -1034,7 +1065,7 @@
           ]
         },
         "rawResult": {
-          "description": "**OPTIONAL**: Raw result of this refund.  Used to help inform Google's\nrisk engine and analytics.  In decline code\u2013mapping situations, data is\nsometimes lost.  The integrator can choose to give Google a raw code.\nFor example, a credit card gateway  (the integrator)  may use this field to\ncommunicate to Google the exact decline code that was received from the\nVISA network.  In that case, the `scope` would be \"visa\" and the `raw_code`\nwould be whatever the VISA network returned.\n\nThis value is **required** if the `result` is not `SUCCESS`.",
+          "description": "**OPTIONAL**: Raw result of this refund.  Used to help inform Google's\nrisk engine and analytics.  In decline code–mapping situations, data is\nsometimes lost.  The integrator can choose to give Google a raw code.\nFor example, a credit card gateway  (the integrator)  may use this field to\ncommunicate to Google the exact decline code that was received from the\nVISA network.  In that case, the `scope` would be \"visa\" and the `raw_code`\nwould be whatever the VISA network returned.\n\nThis value is **required** if the `result` is not `SUCCESS`.",
           "$ref": "#/definitions/RawResult"
         }
       }
@@ -1065,7 +1096,7 @@
           "type": "string"
         },
         "amount": {
-          "description": "**REQUIRED**: The amount of the purchase, in\n[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\") of the currency unit.",
+          "description": "**REQUIRED**: The amount of the purchase, in\n[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\") of the currency unit.",
           "type": "string",
           "format": "int64"
         }
@@ -1121,17 +1152,17 @@
           ]
         },
         "transactionMaxLimit": {
-          "description": "**OPTIONAL**: If `disburseFundsResultCode` is\n`DISBURSEMENT_EXCEEDS_TRANSACTION_LIMIT` then this is the value of the\nmaximum allowable transaction. This is used for structured, user facing\nmessaging and decline rate analysis.\n\nThis amount is\n[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\") of the same `currencyCode` as the original\n`disburseFunds` method call.",
+          "description": "**OPTIONAL**: If `disburseFundsResultCode` is\n`DISBURSEMENT_EXCEEDS_TRANSACTION_LIMIT` then this is the value of the\nmaximum allowable transaction. This is used for structured, user facing\nmessaging and decline rate analysis.\n\nThis amount is\n[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\") of the same `currencyCode` as the original\n`disburseFunds` method call.",
           "type": "string",
           "format": "int64"
         },
         "transactionMinLimit": {
-          "description": "**OPTIONAL**: If `disburseFundsResultCode` is\n`DISBURSEMENT_UNDER_TRANSACTION_LIMIT` then this is the value of the\nminimum allowable transaction. This is used for structured, user facing\nmessaging and decline rate analysis.\n\nThis amount is\n[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\") of the same `currencyCode` as the original\n`disburseFunds` method call.",
+          "description": "**OPTIONAL**: If `disburseFundsResultCode` is\n`DISBURSEMENT_UNDER_TRANSACTION_LIMIT` then this is the value of the\nminimum allowable transaction. This is used for structured, user facing\nmessaging and decline rate analysis.\n\nThis amount is\n[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\") of the same `currencyCode` as the original\n`disburseFunds` method call.",
           "type": "string",
           "format": "int64"
         },
         "rawResult": {
-          "description": "**OPTIONAL**: Raw result of this disbursement.  Used to help inform\nGoogle's risk engine and analytics.  In decline code\u2013mapping situations,\ndata is sometimes lost.  The integrator can choose to give Google a raw\ncode. For example, a credit card gateway  (the integrator)  may use this\nfield to communicate to Google the exact decline code that was received\nfrom the VISA network.  In that case, the `scope` would be \"visa\" and the\n`raw_code` would be whatever the VISA network returned.\n\nThis value is **required** if the `result` is not `SUCCESS`.",
+          "description": "**OPTIONAL**: Raw result of this disbursement.  Used to help inform\nGoogle's risk engine and analytics.  In decline code–mapping situations,\ndata is sometimes lost.  The integrator can choose to give Google a raw\ncode. For example, a credit card gateway  (the integrator)  may use this\nfield to communicate to Google the exact decline code that was received\nfrom the VISA network.  In that case, the `scope` would be \"visa\" and the\n`raw_code` would be whatever the VISA network returned.\n\nThis value is **required** if the `result` is not `SUCCESS`.",
           "$ref": "#/definitions/RawResult"
         }
       }
@@ -1223,7 +1254,7 @@
       "type": "object",
       "properties": {
         "statementDate": {
-          "description": "**REQUIRED**: Date (in America\/Los Angeles) that this statement\nwas created.",
+          "description": "**REQUIRED**: Date (in America/Los Angeles) that this statement\nwas created.",
           "type": "string",
           "format": "int64"
         },
@@ -1320,7 +1351,7 @@
           "type": "string"
         },
         "smsMatchingToken": {
-          "description": "**REQUIRED**: This value is provided by Google and must be included in the\nSMS delivered to the user.  This allows Google to auto-match the SMS on the\ndevice for Android O devices (see\n<a\nhref=\"https:\/\/developer.android.com\/reference\/android\/telephony\/SmsManager.html#createAppSpecificSmsToken(android.app.PendingIntent)\">reference<\/a>\n).  This will be 11 characters.\n\n\nSo for example, if the SMS normally looks like:\n<code>Here's the OTP you requested: &LT;OTP&GT;<\/code>\nAnd Google sends \"0123456789A\"  for this field, then the SMS should look\nlike:\n<code>\n0123456789A\n\nHere's the OTP you requested: YYXXZZ\n<\/code>\nAlternatively it could look like:\n<code>\nHere's the OTP you requested: YYXXZZ\n\n0123456789A\n<\/code>",
+          "description": "**REQUIRED**: This value is provided by Google and must be included in the\nSMS delivered to the user.  This allows Google to auto-match the SMS on the\ndevice for Android O devices (see\n<a\nhref=\"https://developer.android.com/reference/android/telephony/SmsManager.html#createAppSpecificSmsToken(android.app.PendingIntent)\">reference</a>\n).  This will be 11 characters.\n\n\nSo for example, if the SMS normally looks like:\n<code>Here's the OTP you requested: &LT;OTP&GT;</code>\nAnd Google sends \"0123456789A\"  for this field, then the SMS should look\nlike:\n<code>\n0123456789A\n\nHere's the OTP you requested: YYXXZZ\n</code>\nAlternatively it could look like:\n<code>\nHere's the OTP you requested: YYXXZZ\n\n0123456789A\n</code>",
           "type": "string"
         }
       }
@@ -1423,7 +1454,7 @@
           "type": "string"
         },
         "amount": {
-          "description": "**REQUIRED**: The amount of the purchase, in\n[micros](https:\/\/developers.google.com\/standard-payments\/reference\/glossary#micros\n\"What are micros?\") of the currency unit.",
+          "description": "**REQUIRED**: The amount of the purchase, in\n[micros](https://developers.google.com/standard-payments/reference/glossary#micros\n\"What are micros?\") of the currency unit.",
           "type": "string",
           "format": "int64"
         }
