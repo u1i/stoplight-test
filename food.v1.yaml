@@ -1,0 +1,33 @@
+openapi: 3.0.0
+info:
+  title: food
+  version: '1.0'
+servers:
+  - url: 'http://localhost:3000'
+paths:
+  '/stuff/{id}':
+    parameters:
+      - schema:
+          type: string
+        name: id
+        in: path
+        required: true
+    get:
+      summary: Your GET endpoint
+      tags: []
+      responses:
+        '200':
+          description: OK
+      operationId: get-stuff-id
+      parameters:
+        - schema:
+            type: string
+          in: header
+          name: ruebenwurz
+components:
+  schemas: {}
+  securitySchemes:
+    API Key - 1:
+      name: API Key
+      type: apiKey
+      in: query
