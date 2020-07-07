@@ -388,6 +388,14 @@
           }
         }
       }
+    },
+    "/test": {
+      "get": {
+        "summary": "Your GET endpoint",
+        "tags": [],
+        "responses": {},
+        "operationId": "get-test"
+      }
     }
   },
   "definitions": {
